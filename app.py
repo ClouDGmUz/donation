@@ -3,8 +3,11 @@ import sqlite3
 import os
 from datetime import datetime
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static', static_folder='static')
 app.secret_key = 'your-secret-key-change-this'
+
+# Configure static files for production
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 31536000  # 1 year cache
 
 # Configuration
 CRYPTO_ADDRESS = 'TLLjsnXvTKheaDBRMf7Y5NPhZ5v8kb627k'
