@@ -11,8 +11,13 @@ app.secret_key = 'your-secret-key-change-this'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 31536000  # 1 year cache
 
 # Configuration
-CRYPTO_ADDRESS = 'TLLjsnXvTKheaDBRMf7Y5NPhZ5v8kb627k'
+CRYPTO_ADDRESS = 'TLLjsnXvTKheaDBRMf7Y5NPhZ5v8kb627k'  # USDT TRC20 address
 DATABASE = 'donations.db'
+
+# Manual donation tracking - Update these values manually when you receive donations
+RAISED_AMOUNT = 0.0      # Total amount raised so far
+GOAL_AMOUNT = 3500.0     # Target goal amount
+REMAINING_AMOUNT = 3500.0  # Remaining amount needed (GOAL_AMOUNT - RAISED_AMOUNT)
 
 def init_db():
     """Initialize SQLite database"""
@@ -70,30 +75,21 @@ def init_db():
     conn.close()
 
 def get_total_donations():
-    """Calculate total confirmed donations"""
-    conn = sqlite3.connect(DATABASE)
-    cursor = conn.cursor()
-    cursor.execute('SELECT SUM(amount) FROM donations WHERE status = "confirmed"')
-    result = cursor.fetchone()[0]
-    conn.close()
-    return result if result else 0
+    """Get total raised amount (manually updated)"""
+    return RAISED_AMOUNT
 
 def get_total_goal():
-    """Calculate total cost of all components"""
-    conn = sqlite3.connect(DATABASE)
-    cursor = conn.cursor()
-    cursor.execute('SELECT SUM(price) FROM components')
-    result = cursor.fetchone()[0]
-    conn.close()
-    return result if result else 0
+    """Get target goal amount (manually set)"""
+    return GOAL_AMOUNT
+
+def get_remaining_amount():
+    """Get remaining amount needed (manually updated)"""
+    return REMAINING_AMOUNT
 
 def get_progress_percentage():
     """Calculate funding progress percentage"""
-    total_donations = get_total_donations()
-    total_goal = get_total_goal()
-    
-    if total_goal > 0:
-        return min((total_donations / total_goal) * 100, 100)
+    if GOAL_AMOUNT > 0:
+        return min((RAISED_AMOUNT / GOAL_AMOUNT) * 100, 100)
     return 0
 
 def get_components():
@@ -115,10 +111,10 @@ def get_components():
     } for comp in components]
 
 def get_recent_donations(limit=5):
-    """Get recent donations from database"""
+    """Get recent donations from database (kept for template compatibility)"""
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM donations WHERE status = "confirmed" ORDER BY created_at DESC LIMIT ?', (limit,))
+    cursor.execute('SELECT * FROM donations ORDER BY created_at DESC LIMIT ?', (limit,))
     donations = cursor.fetchall()
     conn.close()
     
@@ -192,7 +188,8 @@ def index():
                          progress=progress,
                          components=components,
                          recent_donations=recent_donations,
-                         crypto_address=CRYPTO_ADDRESS)
+                         crypto_address=CRYPTO_ADDRESS,
+                         remaining_amount=get_remaining_amount())
 
 @app.route('/donate', methods=['GET', 'POST'])
 def donate():
@@ -203,17 +200,7 @@ def donate():
             donor_name = request.form.get('donor_name', 'Anonymous')
             message = request.form.get('message', '')
             
-            # Add donation to database
-            conn = sqlite3.connect(DATABASE)
-            cursor = conn.cursor()
-            cursor.execute(
-                'INSERT INTO donations (amount, donor_name, message, status) VALUES (?, ?, ?, ?)',
-                (amount, donor_name, message, 'confirmed')
-            )
-            conn.commit()
-            conn.close()
-            
-            flash('Thank you for your donation!', 'success')
+            flash(f'Thank you {donor_name} for your ${amount:.2f} donation! Please send the payment to the provided USDT address.', 'success')
             return redirect(url_for('index'))
         except ValueError:
             flash('Please enter a valid amount.', 'error')
@@ -229,7 +216,8 @@ def donate():
                          total_donations=total_donations,
                          target_amount=total_goal,
                          progress=progress,
-                         recent_donations=recent_donations)
+                         recent_donations=recent_donations,
+                         remaining_amount=get_remaining_amount())
 
 @app.route('/components')
 def components():
@@ -253,7 +241,10 @@ def components():
                          needed_count=needed_count,
                          total_donations=total_donations,
                          target_amount=total_goal,
-                         progress=progress)
+                         progress=progress,
+                         remaining_amount=get_remaining_amount())
+
+
 
 
 
