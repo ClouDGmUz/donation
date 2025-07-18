@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section mb-5" data-aos="fade-up">
+    <div class="row align-items-center">
+        <div class="col-lg-6">
+            <div class="hero-content">
+                <h1 class="display-4 fw-bold mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    <i class="fas fa-desktop me-3"></i>Professional Gaming PC Build
+                </h1>
+                <p class="lead mb-4 text-muted">
+                    Building a high-performance workstation for gaming, content creation, and professional development. 
+                    Every component carefully selected for optimal performance and reliability.
+                </p>
+                <div class="d-flex gap-3 mb-4">
+                    <a href="{{ url_for('donate') }}" class="btn btn-primary btn-lg btn-pulse">
+                        <i class="fas fa-heart me-2"></i>Support This Build
+                    </a>
+                    <a href="{{ url_for('components') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-list me-2"></i>View Components
+                    </a>
+                </div>
+                <div class="trust-indicators d-flex align-items-center gap-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-shield-alt text-success me-2"></i>
+                        <small class="text-muted">Secure Crypto Payments</small>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-chart-line text-primary me-2"></i>
+                        <small class="text-muted">Real-time Progress</small>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-users text-info me-2"></i>
+                        <small class="text-muted">Community Supported</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="hero-image text-center" data-aos="fade-left" data-aos-delay="200">
+                <div class="position-relative">
+                    <div class="gaming-setup-illustration">
+                        <i class="fas fa-desktop" style="font-size: 8rem; color: #667eea; opacity: 0.8;"></i>
+                        <div class="floating-icons">
+                            <i class="fas fa-microchip floating-icon" style="position: absolute; top: 20%; left: 10%; font-size: 2rem; color: #f59e0b; animation: float 3s ease-in-out infinite;"></i>
+                            <i class="fas fa-memory floating-icon" style="position: absolute; top: 60%; right: 15%; font-size: 1.5rem; color: #10b981; animation: float 3s ease-in-out infinite 1s;"></i>
+                            <i class="fas fa-hdd floating-icon" style="position: absolute; bottom: 30%; left: 20%; font-size: 1.8rem; color: #8b5cf6; animation: float 3s ease-in-out infinite 2s;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Progress Section -->
+<section class="progress-section mb-5" data-aos="fade-up">
+    <div class="card border-0 shadow-lg">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3 class="card-title mb-3">
+                        <i class="fas fa-chart-line text-primary me-2"></i>Funding Progress
+                    </h3>
+                    <div class="progress mb-3" style="height: 20px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                             role="progressbar" 
+                             style="width: {{ progress }}%" 
+                             aria-valuenow="{{ progress }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                            {{ "%.1f"|format(progress) }}%
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="stat-item">
+                                <h4 class="text-success mb-1" id="total-donations">${{ "%.2f"|format(total_donations) }}</h4>
+                                <small class="text-muted">Raised</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-item">
+                                <h4 class="text-primary mb-1" id="target-amount">${{ "%.2f"|format(target_amount) }}</h4>
+                                <small class="text-muted">Goal</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-item">
+                                <h4 class="text-warning mb-1">${{ "%.2f"|format(target_amount - total_donations) }}</h4>
+                                <small class="text-muted">Remaining</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="funding-visual">
+                        <div class="circular-progress" style="background: conic-gradient(#10b981 {{ progress * 3.6 }}deg, #e5e7eb 0deg); width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                            <div style="background: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #374151;">
+                                {{ "%.0f"|format(progress) }}%
+                            </div>
+                        </div>
+                        <p class="mt-3 mb-0 text-muted">of goal reached</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why This Build Section -->
+<section class="why-build-section mb-5" data-aos="fade-up">
+    <div class="card border-0 shadow-lg">
+        <div class="card-body p-5">
+            <h2 class="text-center mb-5">
+                <i class="fas fa-question-circle text-primary me-2"></i>Why This Build?
+            </h2>
+            <div class="row">
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-item text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-gamepad" style="font-size: 3rem; color: #667eea;"></i>
+                        </div>
+                        <h4 class="mb-3">Gaming Excellence</h4>
+                        <p class="text-muted">Experience AAA games at maximum settings with smooth 4K performance and high refresh rates.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-item text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-code" style="font-size: 3rem; color: #10b981;"></i>
+                        </div>
+                        <h4 class="mb-3">Professional Work</h4>
+                        <p class="text-muted">Handle demanding development tasks, video editing, and content creation with ease.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-item text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-rocket" style="font-size: 3rem; color: #f59e0b;"></i>
+                        </div>
+                        <h4 class="mb-3">Future-Proof</h4>
+                        <p class="text-muted">Built with cutting-edge components to ensure years of reliable performance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Components -->
+<section class="components-section mb-5" data-aos="fade-up">
+    <div class="card border-0 shadow-lg">
+        <div class="card-body p-5">
+            <h2 class="text-center mb-5">
+                <i class="fas fa-microchip text-primary me-2"></i>Key Components
+            </h2>
+            <div class="row">
+                {% for component in components[:6] %}
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                    <div class="card component-card h-100 border-0 shadow">
+                        <div class="position-relative">
+                            <img src="{{ component.image_url }}" class="card-img-top" alt="{{ component.name }}" style="height: 200px; object-fit: cover;">
+                            <span class="badge position-absolute top-0 end-0 m-2 
+                                {% if component.status == 'purchased' %}bg-success
+                                {% elif component.status == 'ordered' %}bg-warning
+                                {% else %}bg-secondary{% endif %}">
+                                {% if component.status == 'purchased' %}
+                                    <i class="fas fa-check me-1"></i>Purchased
+                                {% elif component.status == 'ordered' %}
+                                    <i class="fas fa-clock me-1"></i>Ordered
+                                {% else %}
+                                    <i class="fas fa-shopping-cart me-1"></i>Needed
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ component.name }}</h5>
+                            <p class="card-text text-muted">{{ component.description }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 text-primary mb-0">${{ "%.2f"|format(component.price) }}</span>
+                                <div class="component-status">
+                                    {% if component.status == 'purchased' %}
+                                        <i class="fas fa-check-circle text-success"></i>
+                                    {% elif component.status == 'ordered' %}
+                                        <i class="fas fa-clock text-warning"></i>
+                                    {% else %}
+                                        <i class="fas fa-circle text-secondary"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="text-center mt-4">
+                <a href="{{ url_for('components') }}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-list me-2"></i>View All Components
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cryptocurrency Donations -->
+<section class="crypto-section mb-5" data-aos="fade-up">
+    <div class="card border-0 shadow-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <div class="card-body p-5">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 class="mb-4">
+                        <i class="fab fa-bitcoin me-2"></i>Cryptocurrency Donations
+                    </h2>
+                    <p class="lead mb-4">
+                        Due to regional restrictions in Uzbekistan, we can only accept cryptocurrency donations. 
+                        We use USDT TRC20 (Tether on TRON network) for fast and low-cost transactions.
+                    </p>
+                    <div class="crypto-features">
+                        <div class="row">
+                            <div class="col-sm-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-bolt text-warning me-2"></i>
+                                    <span>Fast Transactions</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-dollar-sign text-success me-2"></i>
+                                    <span>Low Fees</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-shield-alt text-info me-2"></i>
+                                    <span>Secure Network</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-globe text-primary me-2"></i>
+                                    <span>Global Access</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="crypto-visual">
+                        <i class="fab fa-bitcoin" style="font-size: 6rem; opacity: 0.8;"></i>
+                        <p class="mt-3 mb-0">USDT TRC20 Network</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recent Donations -->
+{% if recent_donations %}
+<section class="recent-donations mb-5" data-aos="fade-up">
+    <div class="card border-0 shadow-lg">
+        <div class="card-body p-5">
+            <h2 class="text-center mb-5">
+                <i class="fas fa-heart text-danger me-2"></i>Recent Supporters
+            </h2>
+            <div class="row">
+                {% for donation in recent_donations %}
+                <div class="col-md-6 mb-3" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                    <div class="donation-item p-3 border rounded-3" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">
+                                    <i class="fas fa-user-circle text-primary me-2"></i>
+                                    {{ donation.donor_name or 'Anonymous' }}
+                                </h6>
+                                {% if donation.message %}
+                                <p class="text-muted mb-2 small">"{{ donation.message }}"</p>
+                                {% endif %}
+                                <small class="text-muted">{{ donation.created_at }}</small>
+                            </div>
+                            <span class="badge bg-success fs-6">${{ "%.2f"|format(donation.amount) }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action -->
+<section class="cta-section" data-aos="fade-up">
+    <div class="card border-0 shadow-lg text-center" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+        <div class="card-body p-5">
+            <h2 class="mb-4">
+                <i class="fas fa-hands-helping me-2"></i>Help Make This Dream Reality
+            </h2>
+            <p class="lead mb-4">
+                Every contribution brings us closer to building this amazing gaming and productivity setup. 
+                Join our community of supporters and be part of this journey!
+            </p>
+            <a href="{{ url_for('donate') }}" class="btn btn-light btn-lg btn-pulse">
+                <i class="fas fa-heart me-2"></i>Donate Now
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+.floating-icon {
+    animation: float 3s ease-in-out infinite;
+}
+
+.component-card {
+    transition: all 0.3s ease;
+}
+
+.component-card:hover {
+    transform: translateY(-10px);
+}
+
+.feature-item {
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+}
+
+.donation-item {
+    transition: all 0.3s ease;
+}
+
+.donation-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Animate progress bar on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBar = document.querySelector('.progress-bar');
+    if (progressBar) {
+        const targetWidth = progressBar.style.width;
+        progressBar.style.width = '0%';
+        setTimeout(() => {
+            progressBar.style.width = targetWidth;
+        }, 500);
+    }
+});
+</script>
+{% endblock %}

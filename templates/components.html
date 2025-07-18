@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Header Section -->
+<section class="components-header mb-5" data-aos="fade-up">
+    <div class="card border-0 shadow-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <div class="card-body p-5 text-center">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="fas fa-microchip me-3"></i>PC Components
+            </h1>
+            <p class="lead mb-4">
+                Detailed breakdown of all components needed for this high-performance gaming and workstation build.
+                Each component has been carefully selected for optimal performance and value.
+            </p>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="progress mb-3" style="height: 15px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                             role="progressbar" 
+                             style="width: {{ progress }}%" 
+                             aria-valuenow="{{ progress }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                            {{ "%.1f"|format(progress) }}% Complete
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between text-center">
+                        <div>
+                            <h5 class="mb-1">${{ "%.2f"|format(total_donations) }}</h5>
+                            <small>Raised</small>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">${{ "%.2f"|format(target_amount) }}</h5>
+                            <small>Target</small>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">${{ "%.2f"|format(target_amount - total_donations) }}</h5>
+                            <small>Remaining</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Component Status Summary -->
+<section class="status-summary mb-5" data-aos="fade-up">
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow text-center h-100" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
+                <div class="card-body p-4">
+                    <i class="fas fa-check-circle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <h3 class="mb-2">{{ purchased_count }}</h3>
+                    <p class="mb-0">Components Purchased</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow text-center h-100" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white;">
+                <div class="card-body p-4">
+                    <i class="fas fa-clock" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <h3 class="mb-2">{{ ordered_count }}</h3>
+                    <p class="mb-0">Components Ordered</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow text-center h-100" style="background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); color: white;">
+                <div class="card-body p-4">
+                    <i class="fas fa-shopping-cart" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <h3 class="mb-2">{{ needed_count }}</h3>
+                    <p class="mb-0">Components Needed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Components Grid -->
+<section class="components-grid mb-5">
+    <div class="row">
+        {% for component in components %}
+        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="{{ loop.index * 50 }}">
+            <div class="card component-card h-100 border-0 shadow-lg">
+                <div class="position-relative">
+                    <img src="{{ component.image_url }}" 
+                         class="card-img-top" 
+                         alt="{{ component.name }}" 
+                         style="height: 250px; object-fit: cover;">
+                    <div class="position-absolute top-0 end-0 m-3">
+                        <span class="badge fs-6 px-3 py-2
+                            {% if component.status == 'purchased' %}bg-success
+                            {% elif component.status == 'ordered' %}bg-warning text-dark
+                            {% else %}bg-secondary{% endif %}">
+                            {% if component.status == 'purchased' %}
+                                <i class="fas fa-check me-1"></i>Purchased
+                            {% elif component.status == 'ordered' %}
+                                <i class="fas fa-clock me-1"></i>Ordered
+                            {% else %}
+                                <i class="fas fa-shopping-cart me-1"></i>Needed
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="position-absolute bottom-0 start-0 m-3">
+                        <span class="badge bg-dark bg-opacity-75 fs-6 px-3 py-2">
+                            ${{ "%.2f"|format(component.price) }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-3">{{ component.name }}</h5>
+                    <p class="card-text text-muted mb-3">{{ component.description }}</p>
+                    
+                    <!-- Component Specifications -->
+                    {% if component.name.lower().startswith('cpu') or 'processor' in component.name.lower() %}
+                        <div class="component-specs mb-3">
+                            <small class="text-muted d-block"><i class="fas fa-microchip me-1"></i>High-performance processor</small>
+                            <small class="text-muted d-block"><i class="fas fa-tachometer-alt me-1"></i>Multi-core architecture</small>
+                        </div>
+                    {% elif component.name.lower().startswith('gpu') or 'graphics' in component.name.lower() %}
+                        <div class="component-specs mb-3">
+                            <small class="text-muted d-block"><i class="fas fa-tv me-1"></i>4K gaming ready</small>
+                            <small class="text-muted d-block"><i class="fas fa-bolt me-1"></i>Ray tracing support</small>
+                        </div>
+                    {% elif 'ram' in component.name.lower() or 'memory' in component.name.lower() %}
+                        <div class="component-specs mb-3">
+                            <small class="text-muted d-block"><i class="fas fa-memory me-1"></i>High-speed DDR4/DDR5</small>
+                            <small class="text-muted d-block"><i class="fas fa-rocket me-1"></i>Low latency</small>
+                        </div>
+                    {% elif 'ssd' in component.name.lower() or 'storage' in component.name.lower() %}
+                        <div class="component-specs mb-3">
+                            <small class="text-muted d-block"><i class="fas fa-hdd me-1"></i>Fast NVMe interface</small>
+                            <small class="text-muted d-block"><i class="fas fa-shield-alt me-1"></i>Reliable storage</small>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="component-priority">
+                            {% if loop.index <= 3 %}
+                                <span class="badge bg-danger"><i class="fas fa-exclamation me-1"></i>High Priority</span>
+                            {% elif loop.index <= 6 %}
+                                <span class="badge bg-warning text-dark"><i class="fas fa-star me-1"></i>Medium Priority</span>
+                            {% else %}
+                                <span class="badge bg-info"><i class="fas fa-info me-1"></i>Low Priority</span>
+                            {% endif %}
+                        </div>
+                        <div class="component-status-icon">
+                            {% if component.status == 'purchased' %}
+                                <i class="fas fa-check-circle text-success" style="font-size: 1.5rem;"></i>
+                            {% elif component.status == 'ordered' %}
+                                <i class="fas fa-clock text-warning" style="font-size: 1.5rem;"></i>
+                            {% else %}
+                                <i class="fas fa-circle text-secondary" style="font-size: 1.5rem;"></i>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Build Information -->
+<section class="build-info mb-5" data-aos="fade-up">
+    <div class="card border-0 shadow-lg">
+        <div class="card-body p-5">
+            <h2 class="text-center mb-5">
+                <i class="fas fa-info-circle text-primary me-2"></i>Build Information
+            </h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="info-item p-4 border rounded-3" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+                        <h4 class="mb-3">
+                            <i class="fas fa-target text-primary me-2"></i>Performance Goals
+                        </h4>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>4K Gaming at 60+ FPS</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Professional Content Creation</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Multi-tasking Capability</li>
+                            <li class="mb-0"><i class="fas fa-check text-success me-2"></i>Future-proof Performance</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="info-item p-4 border rounded-3" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+                        <h4 class="mb-3">
+                            <i class="fas fa-cogs text-primary me-2"></i>Build Features
+                        </h4>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2"><i class="fas fa-snowflake text-info me-2"></i>Advanced Cooling System</li>
+                            <li class="mb-2"><i class="fas fa-wifi text-info me-2"></i>High-speed Connectivity</li>
+                            <li class="mb-2"><i class="fas fa-expand text-info me-2"></i>Expandable Design</li>
+                            <li class="mb-0"><i class="fas fa-volume-off text-info me-2"></i>Quiet Operation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section" data-aos="fade-up">
+    <div class="card border-0 shadow-lg text-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <div class="card-body p-5">
+            <h2 class="mb-4">
+                <i class="fas fa-heart me-2"></i>Support This Build
+            </h2>
+            <p class="lead mb-4">
+                Help us acquire these components and build the ultimate gaming and productivity machine. 
+                Every contribution makes a difference!
+            </p>
+            <div class="d-flex gap-3 justify-content-center">
+                <a href="{{ url_for('donate') }}" class="btn btn-light btn-lg btn-pulse">
+                    <i class="fas fa-donate me-2"></i>Make a Donation
+                </a>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-home me-2"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.component-card {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.component-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+.component-card .card-img-top {
+    transition: all 0.3s ease;
+}
+
+.component-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.info-item {
+    transition: all 0.3s ease;
+}
+
+.info-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.component-specs {
+    border-left: 3px solid #667eea;
+    padding-left: 10px;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Add some interactive elements
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate progress bar
+    const progressBar = document.querySelector('.progress-bar');
+    if (progressBar) {
+        const targetWidth = progressBar.style.width;
+        progressBar.style.width = '0%';
+        setTimeout(() => {
+            progressBar.style.width = targetWidth;
+        }, 500);
+    }
+    
+    // Add click effect to component cards
+    const componentCards = document.querySelectorAll('.component-card');
+    componentCards.forEach(card => {
+        card.addEventListener('click', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+    });
+});
+</script>
+{% endblock %}
