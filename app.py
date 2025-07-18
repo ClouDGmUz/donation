@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, send_from_directory
 import sqlite3
 import os
 from datetime import datetime
@@ -55,8 +55,8 @@ def init_db():
             ('850W 80+ Gold PSU', 'Reliable power supply with modular cables', 149.99, 'needed', '/static/images/psu.jpg'),
             ('Fractal Define 7', 'Silent and spacious PC case with excellent airflow', 179.99, 'needed', '/static/images/case.jpg'),
             ('Noctua NH-D15', 'Premium air cooler for optimal CPU temperatures', 99.99, 'needed', '/static/images/cooler.jpg'),
-            ('ASUS ROG Swift PG32UQX', '32" 4K 144Hz HDR gaming monitor with G-Sync Ultimate', 2999.99, 'needed', '/static/images/display.jpg'),
-            ('Logitech G Pro X Superlight', 'Ultra-lightweight wireless gaming mouse with HERO sensor', 149.99, 'needed', '/static/images/mouse.jpg'),
+            ('ASUS ROG Swift PG32UQX', '32" 4K 144Hz HDR gaming monitor with G-Sync Ultimate', 2999.99, 'needed', '/static/images/monitor.jpg'),
+            ('Logitech G Pro X Superlight', 'Ultra-lightweight wireless gaming mouse with HERO sensor', 149.99, 'needed', '/static/images/mice.jpg'),
             ('SteelSeries Arctis Pro Wireless', 'Premium wireless gaming headset with Hi-Res audio', 329.99, 'needed', '/static/images/headset.jpg')
         ]
         
@@ -129,6 +129,11 @@ def get_recent_donations(limit=5):
         'status': don[4],
         'created_at': don[5]
     } for don in donations]
+
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    """Serve static files directly through Flask as fallback"""
+    return send_from_directory(app.static_folder, filename)
 
 @app.route('/')
 def index():
