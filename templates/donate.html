@@ -221,11 +221,15 @@
                         <div class="qr-section text-center mt-4">
                             <h6 class="mb-3">QR Code for Mobile Wallets</h6>
                             <div class="qr-code-container p-3 border rounded-3 d-inline-block" style="background: white;">
-                                <img src="{{ url_for('static', filename='images/qr-code.jpg') }}" 
+                                <img src="{{ url_for('generate_qr_code') }}" 
                                      alt="USDT TRC20 Wallet QR Code" 
                                      class="img-fluid" 
-                                     style="max-width: 200px; height: auto;">
+                                     style="max-width: 200px; height: auto;"
+                                     loading="lazy">
                             </div>
+                            <p class="text-muted small mt-2">
+                                <i class="fas fa-sync-alt me-1"></i>QR code generated dynamically
+                            </p>
                         </div>
                         
                         <!-- Important Warnings -->

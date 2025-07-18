@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, f
 import sqlite3
 import os
 from datetime import datetime
+import urllib.parse
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 app.secret_key = 'your-secret-key-change-this'
@@ -134,6 +135,47 @@ def get_recent_donations(limit=5):
 def static_files(filename):
     """Serve static files directly through Flask as fallback"""
     return send_from_directory(app.static_folder, filename)
+
+@app.route('/qr-code')
+def generate_qr_code():
+    """Generate QR code dynamically using QR Code Monkey API"""
+    # QR Code Monkey API configuration
+    qr_config = {
+        "body": "square",
+        "eye": "frame0",
+        "eyeBall": "ball0",
+        "erf1": [],
+        "erf2": [],
+        "erf3": [],
+        "brf1": [],
+        "brf2": [],
+        "brf3": [],
+        "bodyColor": "#000000",
+        "bgColor": "#FFFFFF",
+        "eye1Color": "#000000",
+        "eye2Color": "#000000",
+        "eye3Color": "#000000",
+        "eyeBall1Color": "#000000",
+        "eyeBall2Color": "#000000",
+        "eyeBall3Color": "#000000",
+        "gradientColor1": "",
+        "gradientColor2": "",
+        "gradientType": "linear",
+        "gradientOnEyes": "true",
+        "logo": "",
+        "logoMode": "default"
+    }
+    
+    # Convert config to JSON string and URL encode it
+    import json
+    config_json = json.dumps(qr_config)
+    config_encoded = urllib.parse.quote(config_json)
+    
+    # Build the QR Code Monkey API URL
+    qr_url = f"https://api.qrcode-monkey.com/qr/custom?download=true&file=png&data={CRYPTO_ADDRESS}&size=300&config={config_encoded}"
+    
+    # Redirect to the QR code image
+    return redirect(qr_url)
 
 @app.route('/')
 def index():
