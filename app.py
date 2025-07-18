@@ -55,9 +55,9 @@ def init_db():
             ('850W 80+ Gold PSU', 'Reliable power supply with modular cables', 149.99, 'needed', '/static/images/psu.jpg'),
             ('Fractal Define 7', 'Silent and spacious PC case with excellent airflow', 179.99, 'needed', '/static/images/case.jpg'),
             ('Noctua NH-D15', 'Premium air cooler for optimal CPU temperatures', 99.99, 'needed', '/static/images/cooler.jpg'),
-            ('ASUS ROG Swift PG32UQX', '32" 4K 144Hz HDR gaming monitor with G-Sync Ultimate', 2999.99, 'needed', 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400'),
-            ('Logitech G Pro X Superlight', 'Ultra-lightweight wireless gaming mouse with HERO sensor', 149.99, 'needed', 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400'),
-            ('SteelSeries Arctis Pro Wireless', 'Premium wireless gaming headset with Hi-Res audio', 329.99, 'needed', 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400')
+            ('ASUS ROG Swift PG32UQX', '32" 4K 144Hz HDR gaming monitor with G-Sync Ultimate', 2999.99, 'needed', '/static/images/display.jpg'),
+            ('Logitech G Pro X Superlight', 'Ultra-lightweight wireless gaming mouse with HERO sensor', 149.99, 'needed', '/static/images/mouse.jpg'),
+            ('SteelSeries Arctis Pro Wireless', 'Premium wireless gaming headset with Hi-Res audio', 329.99, 'needed', '/static/images/headset.jpg')
         ]
         
         cursor.executemany(
